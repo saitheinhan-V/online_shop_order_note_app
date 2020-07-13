@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
+import 'package:order_app/user/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'index_page.dart';
@@ -41,7 +42,7 @@ class _SplashState extends State<Splash> {
 
     if (_seen) {
       Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(builder: (context) => new IndexPage()));
+          new MaterialPageRoute(builder: (context) => new LoginPage()));
     } else {
       await prefs.setBool('seen', true);
       Navigator.of(context).pushReplacement(
@@ -134,7 +135,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
   void onDonePress() {
     Navigator.of(context).pushReplacement(
-        new MaterialPageRoute(builder: (context) => IndexPage())
+        new MaterialPageRoute(builder: (context) => LoginPage())
     );
   }
 
