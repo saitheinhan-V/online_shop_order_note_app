@@ -55,8 +55,7 @@ class _CitySetupPageState extends State<CitySetupPage> {
           itemCount: cityList.length,
           itemBuilder: (context,index){
             return GestureDetector(
-              onDoubleTap
-                  : (){
+              onDoubleTap: (){
                 setState(() {
                   addNewCity(index);
                 });
