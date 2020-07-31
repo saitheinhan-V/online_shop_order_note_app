@@ -17,13 +17,14 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
 
   static List<Setup> _setup = <Setup>[
-    Setup(title: 'Account', icon: Icons.person_pin, widget: AccountSetupPage()),
-    Setup(title: 'City', icon: Icons.location_city, widget: CitySetupPage()),
-    Setup(title: 'Color', icon: Icons.color_lens, widget: ColorSetupPage()),
-    Setup(title: 'Gender', icon: Icons.people_outline, widget: GenderSetupPage()),
-    Setup(title: 'Size', icon: Icons.format_size, widget: SizeSetupPage()),
-    Setup(title: 'Expense', icon: Icons.alarm_add, widget: ExpenseSetupPage()),
+    Setup(title: 'Account', image: "man.png", widget: AccountSetupPage()),
+    Setup(title: 'City', image: "buildings.png", widget: CitySetupPage()),
+    Setup(title: 'Color', image: "color-picker.png", widget: ColorSetupPage()),
+    Setup(title: 'Gender', image: "gender.png", widget: GenderSetupPage()),
+    Setup(title: 'Size', image: "king-size.png", widget: SizeSetupPage()),
+    Setup(title: 'Expense', image: "accounting.png", widget: ExpenseSetupPage()),
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +33,20 @@ class _SettingPageState extends State<SettingPage> {
         child: GridView.builder(
           itemCount: _setup.length,
           itemBuilder: (context,index){
+            Setup setup = _setup[index];
             return new Card(
               child: GestureDetector(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => _setup[index].widget));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => setup.widget));
                 },
                 child: new GridTile(
                   footer: Container(
-                    margin: EdgeInsets.only(top: 5.0,bottom: 10.0),
-                      child: Center(child: new Text(_setup[index].title))),
+                    margin: EdgeInsets.only(bottom: 10.0),
+                      child: Center(child: new Text(setup.title))),
                   child: new Container(
                     margin: EdgeInsets.only(top: 10.0,bottom: 10.0),
                     child: Center(
-                      child: Icon(_setup[index].icon,size: 80.0,color: Colors.blueAccent,),
+                      child: Image.asset("assets/"+"${setup.image}",height: 100.0,fit: BoxFit.cover,)
                     ),
                   ), //just for testing, will fill with image later
                 ),
@@ -85,9 +87,9 @@ class _SetupListState extends State<SetupList> {
 
 class Setup {
   final String title;
-  final IconData icon;
+  final String image;
   final Widget widget;
 
-  const Setup({this.title, this.icon, this.widget});
+  const Setup({this.title, this.image, this.widget});
 }
 
