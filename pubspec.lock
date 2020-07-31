@@ -43,7 +43,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-<<<<<<< HEAD
   bson:
     dependency: transitive
     description:
@@ -51,7 +50,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.2"
-=======
   build:
     dependency: transitive
     description:
@@ -108,7 +106,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.1.0"
->>>>>>> 90b9821001ba65e53052433c72449dbc0191d4f6
   charcode:
     dependency: transitive
     description:
@@ -201,15 +198,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-<<<<<<< HEAD
-  hive:
-    dependency: "direct main"
-    description:
-      name: hive
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.1+1"
-=======
   glob:
     dependency: transitive
     description:
@@ -224,6 +212,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  hive:
+    dependency: "direct main"
+    description:
+      name: hive
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.1+1"
   html:
     dependency: transitive
     description:
@@ -245,7 +240,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
->>>>>>> 90b9821001ba65e53052433c72449dbc0191d4f6
   image:
     dependency: transitive
     description:
@@ -267,8 +261,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.1"
-<<<<<<< HEAD
-=======
   io:
     dependency: transitive
     description:
@@ -290,7 +282,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
->>>>>>> 90b9821001ba65e53052433c72449dbc0191d4f6
   logging:
     dependency: transitive
     description:
@@ -298,8 +289,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.11.4"
-<<<<<<< HEAD
-=======
   lombok:
     dependency: "direct main"
     description:
@@ -307,7 +296,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.5"
->>>>>>> 90b9821001ba65e53052433c72449dbc0191d4f6
   matcher:
     dependency: transitive
     description:
@@ -322,7 +310,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
-<<<<<<< HEAD
+  mime:
+    dependency: transitive
+    description:
+      name: mime
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.6+3"
+  mobx:
+    dependency: transitive
+    description:
+      name: mobx
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1+1"
   mongo_dart:
     dependency: "direct main"
     description:
@@ -344,21 +345,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.18.2"
-=======
-  mime:
-    dependency: transitive
-    description:
-      name: mime
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.6+3"
-  mobx:
-    dependency: transitive
-    description:
-      name: mobx
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.1+1"
   mustache4dart:
     dependency: transitive
     description:
@@ -387,7 +373,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.3"
->>>>>>> 90b9821001ba65e53052433c72449dbc0191d4f6
   path:
     dependency: transitive
     description:

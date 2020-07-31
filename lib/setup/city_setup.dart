@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:order_app/models/City.dart';
+import 'package:order_app/models/city.dart';
 
 class CitySetupPage extends StatefulWidget {
   @override

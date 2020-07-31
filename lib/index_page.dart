@@ -82,7 +82,7 @@ class _IndexPageState extends State<IndexPage> with SingleTickerProviderStateMix
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            title: Text('Setting')
+            title: Text('Setup')
           )
         ],
       ),
