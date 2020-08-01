@@ -1,6 +1,9 @@
+import 'package:floor/floor.dart';
+@entity
 class Expense{
-  int expenseId;
-  String expenseName;
+  @PrimaryKey(autoGenerate: true)
+  final int expenseId;
+  final String expenseName;
 
   Expense(this.expenseId, this.expenseName);
 }

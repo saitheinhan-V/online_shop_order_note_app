@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:order_app/common/global.dart';
+import 'package:order_app/dao/color_dao.dart';
 import 'package:order_app/models/color.dart';
 
 
@@ -9,25 +11,21 @@ class ColorSetupPage extends StatefulWidget {
 }
 
 class _ColorSetupPageState extends State<ColorSetupPage> {
-
   List<Color> colorList=new List<Color>();
-
   FocusNode focusNode= new FocusNode();
   TextEditingController controller=new TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
-
   String colorName="";
+  ColorDao colorDao;
+  Color color;
 
 
   @override
   void initState() {
     // TODO: implement initState
+    getDatabase();
     super.initState();
-    colorList.add(Color(1,'Yellow'));
-    colorList.add(Color(2,'Red'));
-    colorList.add(Color(3,"Green"));
-  }
+    }
 
 
 
@@ -134,12 +132,16 @@ class _ColorSetupPageState extends State<ColorSetupPage> {
                   onPressed: (){
                     setState(() {
                       if(_formKey.currentState.validate()){
-
                         if(index<0){
-                          colorList.add(Color(1,controller.text.toString()));
+                          color =Color(null,controller.text.toString());
+                          colorDao.insertColor(color);
+                          colorList.add(color);
                         }else{
+                          int id =colorList[index].colorId;
+                          color =Color(id, controller.text.toString());
+                          colorDao.updateColor(color);
                           colorList.removeAt(index);
-                          colorList.insert(index, Color(colorList[index].colorId, controller.text.toString()));
+                          colorList.insert(index,color);
                         }
 
                         Navigator.pop(ctx);
@@ -153,4 +155,12 @@ class _ColorSetupPageState extends State<ColorSetupPage> {
       }
     );
   }
+  Future<void> getDatabase() async{
+    colorDao = Global.database.colorDao;
+    colorList = await colorDao.findAllTasks();
+    int count = colorList.length;
+    print("Color List  Size : $count");
+    setState(() {});
+  }
+
 }

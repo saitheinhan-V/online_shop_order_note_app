@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:order_app/common/global.dart';
+import 'package:order_app/dao/city_dao.dart';
+import 'package:order_app/database/database.dart';
 import 'package:order_app/models/city.dart';
 
 class CitySetupPage extends StatefulWidget {
@@ -7,32 +10,21 @@ class CitySetupPage extends StatefulWidget {
 }
 
 class _CitySetupPageState extends State<CitySetupPage> {
-
   List<City> cityList=new List<City>();
-
   FocusNode focusNode= new FocusNode();
   TextEditingController controller=new TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
-
   String cityName="";
+  CityDao cityDao;
+  City city;
 
-  bool isWriting = false;
-  bool validate;
 
   @override
   void initState() {
+    getDatabase();
     // TODO: implement initState
     super.initState();
-    validate = true;
-    cityList.add(City(1,'Lashio'));
-    cityList.add(City(2,'Mandalay'));
-    cityList.add(City(3,"Yangon"));
-  }
-
-  isWritingTo(bool val){
-    isWriting = val;
-  }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -52,30 +44,30 @@ class _CitySetupPageState extends State<CitySetupPage> {
       body: Container(
         margin: EdgeInsets.only(top: 10.0,left: 20.0,right: 20.0,bottom: 10.0),
         child: ListView.builder(
-          itemCount: cityList.length,
-          itemBuilder: (context,index){
-            return GestureDetector(
-              onDoubleTap: (){
-                setState(() {
-                  addNewCity(index);
-                });
-              },
-              child: Container(
-                margin: EdgeInsets.only(top: 15.0),
-                child: Column(
-                  children: <Widget>[
-                    Text(cityList[index].cityName,
+        itemCount: cityList.length,
+        itemBuilder: (context,index){
+          return GestureDetector(
+            onDoubleTap: (){
+              setState(() {
+                addNewCity(index);
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: 15.0),
+              child: Column(
+                children: <Widget>[
+                  Text(cityList[index].cityName,
                     style: TextStyle(
-                      fontSize: 15.0
+                        fontSize: 15.0
                     ),),
-                    SizedBox(height: 10.0,),
-                    Container(height: 1.0,color: Colors.black26,)
-                  ],
-                ),
+                  SizedBox(height: 10.0,),
+                  Container(height: 1.0,color: Colors.black26,)
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
+      ),
       ),
     );
   }
@@ -137,14 +129,17 @@ class _CitySetupPageState extends State<CitySetupPage> {
                   onPressed: (){
                     setState(() {
                       if(_formKey.currentState.validate()){
-
                         if(index<0){
-                          cityList.add(City(1,controller.text.toString()));
+                          city =City(null,controller.text.toString());
+                          cityDao.insertCity(city);
+                          cityList.add(city);
                         }else{
+                          int id =cityList[index].cityId;
+                          city =City(id, controller.text.toString());
+                          cityDao.updateCity(city);
                           cityList.removeAt(index);
-                          cityList.insert(index, City(cityList[index].cityId, controller.text.toString()));
+                          cityList.insert(index,city );
                         }
-
                         Navigator.pop(ctx);
                       }
                     });
@@ -156,4 +151,13 @@ class _CitySetupPageState extends State<CitySetupPage> {
       }
     );
   }
+Future<void> getDatabase() async{
+  cityDao = Global.database.cityDao;
+  cityList = await cityDao.findAllCity();
+  int count = cityList.length;
+  print("City List Size : $count");
+  setState(() {});
 }
+
+}
+
