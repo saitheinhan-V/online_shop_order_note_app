@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:order_app/common/global.dart';
-import 'package:order_app/dao/expense.dart';
+import 'package:order_app/dao/expense_dao.dart';
 import 'package:order_app/models/expense.dart';
 
 

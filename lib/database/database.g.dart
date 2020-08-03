@@ -70,6 +70,12 @@ class _$FlutterDatabase extends FlutterDatabase {
 
   ExpenseDao _expenseDaoInstance;
 
+  CustomerDao _customerDaoInstance;
+
+  GenIdDao _genIdDaoInstance;
+
+  UserDao _userDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -97,6 +103,12 @@ class _$FlutterDatabase extends FlutterDatabase {
             'CREATE TABLE IF NOT EXISTS `Gender` (`genderId` INTEGER PRIMARY KEY AUTOINCREMENT, `genderName` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Expense` (`expenseId` INTEGER PRIMARY KEY AUTOINCREMENT, `expenseName` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Customer` (`cusId` TEXT, `cusName` TEXT, `cusPhoneNo` TEXT, `cusAddress` TEXT, `cusRegDate` TEXT, `cusEmail` TEXT, `cusSocialLink` TEXT, `cityId` INTEGER, `genderId` INTEGER, PRIMARY KEY (`cusId`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `GenId` (`period` TEXT, `type` TEXT, `serialNo` INTEGER, PRIMARY KEY (`period`, `type`, `serialNo`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `User` (`phoneNo` TEXT, `password` TEXT, `userName` TEXT, PRIMARY KEY (`phoneNo`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -127,6 +139,21 @@ class _$FlutterDatabase extends FlutterDatabase {
   @override
   ExpenseDao get expenseDao {
     return _expenseDaoInstance ??= _$ExpenseDao(database, changeListener);
+  }
+
+  @override
+  CustomerDao get customerDao {
+    return _customerDaoInstance ??= _$CustomerDao(database, changeListener);
+  }
+
+  @override
+  GenIdDao get genIdDao {
+    return _genIdDaoInstance ??= _$GenIdDao(database, changeListener);
+  }
+
+  @override
+  UserDao get userDao {
+    return _userDaoInstance ??= _$UserDao(database, changeListener);
   }
 }
 
@@ -545,5 +572,283 @@ class _$ExpenseDao extends ExpenseDao {
   @override
   Future<void> deleteExpense(Expense expense) async {
     await _expenseDeletionAdapter.delete(expense);
+  }
+}
+
+class _$CustomerDao extends CustomerDao {
+  _$CustomerDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _customerInsertionAdapter = InsertionAdapter(
+            database,
+            'Customer',
+            (Customer item) => <String, dynamic>{
+                  'cusId': item.cusId,
+                  'cusName': item.cusName,
+                  'cusPhoneNo': item.cusPhoneNo,
+                  'cusAddress': item.cusAddress,
+                  'cusRegDate': item.cusRegDate,
+                  'cusEmail': item.cusEmail,
+                  'cusSocialLink': item.cusSocialLink,
+                  'cityId': item.cityId,
+                  'genderId': item.genderId
+                }),
+        _customerUpdateAdapter = UpdateAdapter(
+            database,
+            'Customer',
+            ['cusId'],
+            (Customer item) => <String, dynamic>{
+                  'cusId': item.cusId,
+                  'cusName': item.cusName,
+                  'cusPhoneNo': item.cusPhoneNo,
+                  'cusAddress': item.cusAddress,
+                  'cusRegDate': item.cusRegDate,
+                  'cusEmail': item.cusEmail,
+                  'cusSocialLink': item.cusSocialLink,
+                  'cityId': item.cityId,
+                  'genderId': item.genderId
+                }),
+        _customerDeletionAdapter = DeletionAdapter(
+            database,
+            'Customer',
+            ['cusId'],
+            (Customer item) => <String, dynamic>{
+                  'cusId': item.cusId,
+                  'cusName': item.cusName,
+                  'cusPhoneNo': item.cusPhoneNo,
+                  'cusAddress': item.cusAddress,
+                  'cusRegDate': item.cusRegDate,
+                  'cusEmail': item.cusEmail,
+                  'cusSocialLink': item.cusSocialLink,
+                  'cityId': item.cityId,
+                  'genderId': item.genderId
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _cityMapper = (Map<String, dynamic> row) =>
+      City(row['cityId'] as int, row['cityName'] as String);
+
+  final InsertionAdapter<Customer> _customerInsertionAdapter;
+
+  final UpdateAdapter<Customer> _customerUpdateAdapter;
+
+  final DeletionAdapter<Customer> _customerDeletionAdapter;
+
+  @override
+  Future<City> findCustomerById(int id) async {
+    return _queryAdapter.query('SELECT * FROM customer WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _cityMapper);
+  }
+
+  @override
+  Future<List<City>> findAllCustomers() async {
+    return _queryAdapter.queryList('SELECT * FROM customer',
+        mapper: _cityMapper);
+  }
+
+  @override
+  Stream<List<City>> findAllCustomersAsStream() {
+    return _queryAdapter.queryListStream('SELECT * FROM customer',
+        queryableName: 'City', isView: false, mapper: _cityMapper);
+  }
+
+  @override
+  Future<void> insertCustomer(Customer customer) async {
+    await _customerInsertionAdapter.insert(customer, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> insertCustomers(List<Customer> customer) async {
+    await _customerInsertionAdapter.insertList(
+        customer, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateCustomer(Customer customer) async {
+    await _customerUpdateAdapter.update(customer, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteCustomer(Customer customer) async {
+    await _customerDeletionAdapter.delete(customer);
+  }
+}
+
+class _$GenIdDao extends GenIdDao {
+  _$GenIdDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _genIdInsertionAdapter = InsertionAdapter(
+            database,
+            'GenId',
+            (GenId item) => <String, dynamic>{
+                  'period': item.period,
+                  'type': item.type,
+                  'serialNo': item.serialNo
+                }),
+        _genIdUpdateAdapter = UpdateAdapter(
+            database,
+            'GenId',
+            ['period', 'type', 'serialNo'],
+            (GenId item) => <String, dynamic>{
+                  'period': item.period,
+                  'type': item.type,
+                  'serialNo': item.serialNo
+                }),
+        _genIdDeletionAdapter = DeletionAdapter(
+            database,
+            'GenId',
+            ['period', 'type', 'serialNo'],
+            (GenId item) => <String, dynamic>{
+                  'period': item.period,
+                  'type': item.type,
+                  'serialNo': item.serialNo
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _cityMapper = (Map<String, dynamic> row) =>
+      City(row['cityId'] as int, row['cityName'] as String);
+
+  final InsertionAdapter<GenId> _genIdInsertionAdapter;
+
+  final UpdateAdapter<GenId> _genIdUpdateAdapter;
+
+  final DeletionAdapter<GenId> _genIdDeletionAdapter;
+
+  @override
+  Future<City> finGenIdByID(String period, String type, int serialNo) async {
+    return _queryAdapter.query(
+        'SELECT * FROM genId WHERE period = ? and type = ? and serialNo =?',
+        arguments: <dynamic>[period, type, serialNo],
+        mapper: _cityMapper);
+  }
+
+  @override
+  Future<List<City>> findAll() async {
+    return _queryAdapter.queryList('SELECT * FROM genId', mapper: _cityMapper);
+  }
+
+  @override
+  Stream<List<City>> findAllAsSteam() {
+    return _queryAdapter.queryListStream('SELECT * FROM genId',
+        queryableName: 'City', isView: false, mapper: _cityMapper);
+  }
+
+  @override
+  Future<void> insertGenId(GenId genId) async {
+    await _genIdInsertionAdapter.insert(genId, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> insertGenIds(List<GenId> genId) async {
+    await _genIdInsertionAdapter.insertList(genId, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateGenId(GenId genId) async {
+    await _genIdUpdateAdapter.update(genId, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteGenId(GenId genId) async {
+    await _genIdDeletionAdapter.delete(genId);
+  }
+}
+
+class _$UserDao extends UserDao {
+  _$UserDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _userInsertionAdapter = InsertionAdapter(
+            database,
+            'User',
+            (User item) => <String, dynamic>{
+                  'phoneNo': item.phoneNo,
+                  'password': item.password,
+                  'userName': item.userName
+                },
+            changeListener),
+        _userUpdateAdapter = UpdateAdapter(
+            database,
+            'User',
+            ['phoneNo'],
+            (User item) => <String, dynamic>{
+                  'phoneNo': item.phoneNo,
+                  'password': item.password,
+                  'userName': item.userName
+                },
+            changeListener),
+        _userDeletionAdapter = DeletionAdapter(
+            database,
+            'User',
+            ['phoneNo'],
+            (User item) => <String, dynamic>{
+                  'phoneNo': item.phoneNo,
+                  'password': item.password,
+                  'userName': item.userName
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _cityMapper = (Map<String, dynamic> row) =>
+      City(row['cityId'] as int, row['cityName'] as String);
+
+  static final _userMapper = (Map<String, dynamic> row) => User();
+
+  final InsertionAdapter<User> _userInsertionAdapter;
+
+  final UpdateAdapter<User> _userUpdateAdapter;
+
+  final DeletionAdapter<User> _userDeletionAdapter;
+
+  @override
+  Future<City> findUserById(String phoneNo, String password) async {
+    return _queryAdapter.query(
+        'SELECT * FROM user WHERE phoneNo = ? and password = ?',
+        arguments: <dynamic>[phoneNo, password],
+        mapper: _cityMapper);
+  }
+
+  @override
+  Future<List<User>> findAllUser() async {
+    return _queryAdapter.queryList('SELECT * FROM user', mapper: _userMapper);
+  }
+
+  @override
+  Stream<List<User>> findAllUserAsStream() {
+    return _queryAdapter.queryListStream('SELECT * FROM user',
+        queryableName: 'User', isView: false, mapper: _userMapper);
+  }
+
+  @override
+  Future<void> insertUser(User user) async {
+    await _userInsertionAdapter.insert(user, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> insertUsers(List<User> user) async {
+    await _userInsertionAdapter.insertList(user, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateUser(User user) async {
+    await _userUpdateAdapter.update(user, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteUser(User user) async {
+    await _userDeletionAdapter.delete(user);
   }
 }
