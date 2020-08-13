@@ -6,9 +6,15 @@ import 'package:intro_slider/slide_object.dart';
 import 'package:order_app/user/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'index_page.dart';
+import 'common/global.dart';
+import 'database/database.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Global.database= await $FloorFlutterDatabase
+      .databaseBuilder('flutter_database.db')
+      .build();
   runApp(MyApp());
 }
 
@@ -19,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        fontFamily: 'Pyidaungsu',
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),

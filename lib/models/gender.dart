@@ -1,6 +1,9 @@
+import 'package:floor/floor.dart';
+@entity
 class Gender{
-  int genderId;
-  String genderName;
+  @PrimaryKey(autoGenerate: true)
+  final int genderId;
+  final String genderName;
 
   Gender(this.genderId, this.genderName);
 }

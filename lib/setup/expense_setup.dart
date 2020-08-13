@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:order_app/common/global.dart';
+import 'package:order_app/dao/expense_dao.dart';
 import 'package:order_app/models/expense.dart';
 
 
@@ -9,24 +13,20 @@ class ExpenseSetupPage extends StatefulWidget {
 }
 
 class _ExpenseSetupPageState extends State<ExpenseSetupPage> {
-
   List<Expense> expenseList=new List<Expense>();
-
   FocusNode focusNode= new FocusNode();
   TextEditingController controller=new TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
-
   String expenseName="";
+  ExpenseDao expenseDao;
+  Expense expense;
 
 
   @override
   void initState() {
     // TODO: implement initState
+    getDatabase();
     super.initState();
-    expenseList.add(Expense(1,'Car Fee'));
-    expenseList.add(Expense(2,'Deliver Fee'));
-    expenseList.add(Expense(3,"Other Fee"));
   }
 
 
@@ -134,12 +134,16 @@ class _ExpenseSetupPageState extends State<ExpenseSetupPage> {
                 onPressed: (){
                   setState(() {
                     if(_formKey.currentState.validate()){
-
                       if(index<0){
-                        expenseList.add(Expense(1,controller.text.toString()));
+                        expense =Expense(null,controller.text.toString());
+                        expenseDao.insertExpense(expense);
+                        expenseList.add(expense);
                       }else{
+                        int id =expenseList[index].expenseId;
+                        expense =Expense(id, controller.text.toString());
+                        expenseDao.updateExpense(expense);
                         expenseList.removeAt(index);
-                        expenseList.insert(index, Expense(expenseList[index].expenseId, controller.text.toString()));
+                        expenseList.insert(index,expense);
                       }
 
                       Navigator.pop(ctx);
@@ -152,5 +156,12 @@ class _ExpenseSetupPageState extends State<ExpenseSetupPage> {
           );
         }
     );
+  }
+  Future<void> getDatabase() async{
+    expenseDao = Global.database.expenseDao;
+    expenseList = await expenseDao.findAllExpense();
+    int count = expenseList.length;
+    print("Expense List Size : $count");
+    setState(() {});
   }
 }

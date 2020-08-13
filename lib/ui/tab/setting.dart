@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:order_app/index_page.dart';
 import 'package:order_app/setup/account_setup.dart';
 import 'package:order_app/setup/city_setup.dart';
 import 'package:order_app/setup/color_setup.dart';

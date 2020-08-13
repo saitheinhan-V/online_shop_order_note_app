@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:order_app/common/global.dart';
+import 'package:order_app/dao/size_dao.dart';
 import 'package:order_app/models/size.dart';
 
 
@@ -9,24 +11,20 @@ class SizeSetupPage extends StatefulWidget {
 }
 
 class _SizeSetupPageState extends State<SizeSetupPage> {
-
   List<ItemSize> sizeList=new List<ItemSize>();
-
   FocusNode focusNode= new FocusNode();
   TextEditingController controller=new TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
-
   String sizeName="";
+  ItemSize itemSize;
+  SizeDao sizeDao;
 
 
   @override
   void initState() {
     // TODO: implement initState
+    getDatabase();
     super.initState();
-    sizeList.add(ItemSize(1,'XL'));
-    sizeList.add(ItemSize(2,'L'));
-    sizeList.add(ItemSize(3,"XXX"));
   }
 
 
@@ -134,14 +132,17 @@ class _SizeSetupPageState extends State<SizeSetupPage> {
                   onPressed: (){
                     setState(() {
                       if(_formKey.currentState.validate()){
-
                         if(index<0){
-                          sizeList.add(ItemSize(1,controller.text.toString()));
+                          itemSize =ItemSize(null,controller.text.toString());
+                          sizeDao.insertSize(itemSize);
+                          sizeList.add(itemSize);
                         }else{
+                          int id =sizeList[index].sizeId;
+                          itemSize =ItemSize(id, controller.text.toString());
+                          sizeDao.updateSize(itemSize);
                           sizeList.removeAt(index);
-                          sizeList.insert(index, ItemSize(sizeList[index].sizeId, controller.text.toString()));
+                          sizeList.insert(index,itemSize);
                         }
-
                         Navigator.pop(ctx);
                       }
                     });
@@ -152,5 +153,12 @@ class _SizeSetupPageState extends State<SizeSetupPage> {
           );
       }
     );
+  }
+  Future<void> getDatabase() async{
+    sizeDao = Global.database.sizeDao;
+    sizeList = await sizeDao.findAllSize();
+    int count =sizeList.length;
+    print("Item Size List Size : $count");
+    setState(() {});
   }
 }

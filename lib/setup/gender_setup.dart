@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:order_app/common/global.dart';
+import 'package:order_app/dao/gender_dao.dart';
 import 'package:order_app/models/gender.dart';
 
 
@@ -11,22 +13,19 @@ class GenderSetupPage extends StatefulWidget {
 class _GenderSetupPageState extends State<GenderSetupPage> {
 
   List<Gender> genderList=new List<Gender>();
-
   FocusNode focusNode= new FocusNode();
   TextEditingController controller=new TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
-
   String genderName="";
+  GenderDao genderDao;
+  Gender gender;
 
 
   @override
   void initState() {
     // TODO: implement initState
+    getDatabase();
     super.initState();
-    genderList.add(Gender(1,'Male'));
-    genderList.add(Gender(2,'Female'));
-    genderList.add(Gender(3,"Other"));
   }
 
 
@@ -134,14 +133,17 @@ class _GenderSetupPageState extends State<GenderSetupPage> {
                   onPressed: (){
                     setState(() {
                       if(_formKey.currentState.validate()){
-
                         if(index<0){
-                          genderList.add(Gender(1,controller.text.toString()));
+                          gender =Gender(null,controller.text.toString());
+                          genderDao.insertGender(gender);
+                          genderList.add(gender);
                         }else{
+                          int id =genderList[index].genderId;
+                          gender =Gender(id, controller.text.toString());
+                          genderDao.updateGender(gender);
                           genderList.removeAt(index);
-                          genderList.insert(index, Gender(genderList[index].genderId, controller.text.toString()));
+                          genderList.insert(index,gender);
                         }
-
                         Navigator.pop(ctx);
                       }
                     });
@@ -152,5 +154,12 @@ class _GenderSetupPageState extends State<GenderSetupPage> {
           );
       }
     );
+  }
+  Future<void> getDatabase() async{
+    genderDao = Global.database.genderDao;
+    genderList = await genderDao.findAllGender();
+    int count =genderList.length;
+    print("Gender List Size : $count");
+    setState(() {});
   }
 }

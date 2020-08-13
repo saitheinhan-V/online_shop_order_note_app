@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:order_app/index_page.dart';
@@ -8,10 +10,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
-  TextEditingController phoneController;
-  TextEditingController passwordController;
-
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 50.0,),
             TextFormField(
-              controller: phoneController,
+              controller: _phoneController,
               autofocus: true,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.phone, color: Colors.grey, size: 22),
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 20.0,),
             TextFormField(
-              controller: passwordController,
+              controller: _passwordController,
               autofocus: true,
               obscureText: true,
               decoration: InputDecoration(
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 20.0,),
             GestureDetector(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => IndexPage()));
+                _performLogin();
               },
               child: Container(
                 height: 40.0,
@@ -66,4 +66,34 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  void _performLogin() async {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => IndexPage()));
+  }
+    /*String phone = _phoneController.text;
+    String password = _passwordController.text;
+    print('login attempt: $phone with $password');
+    Firestore.instance.collection('appUser').document(phone).get()
+        .then((DocumentSnapshot ds) {
+      if(ds.exists){
+        String jsonString = jsonEncode(ds.data);
+        final data = jsonDecode(jsonString);
+        String pass = data['password'];
+        bool active = data['active'];
+        if(active){
+          if(password == pass){
+            print('Login Success...');
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => IndexPage()));
+          }else{
+            print("Invalid Password");
+          }
+        }else{
+          print('Your account is not validate...');
+        }
+      }else{
+        print("No Document");
+      }
+    });
+  }*/
 }
