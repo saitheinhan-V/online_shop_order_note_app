@@ -11,12 +11,14 @@ import 'database/database.dart';
 
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   Global.database= await $FloorFlutterDatabase
       .databaseBuilder('flutter_database.db')
       .build();
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

@@ -76,6 +76,10 @@ class _$FlutterDatabase extends FlutterDatabase {
 
   UserDao _userDaoInstance;
 
+  OrderDao _orderDaoInstance;
+
+  OrderDetailDao _orderDetailDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -109,6 +113,10 @@ class _$FlutterDatabase extends FlutterDatabase {
             'CREATE TABLE IF NOT EXISTS `GenId` (`period` TEXT, `type` TEXT, `serialNo` INTEGER, PRIMARY KEY (`period`, `type`, `serialNo`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `User` (`phoneNo` TEXT, `password` TEXT, `userName` TEXT, PRIMARY KEY (`phoneNo`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Order` (`orderId` INTEGER PRIMARY KEY AUTOINCREMENT, `isPaid` INTEGER, `discount` REAL, `dueDate` TEXT, `paidAmount` REAL, `orderDate` TEXT, `updateDate` TEXT, `orderTotalAmt` REAL, `orderTotalQty` INTEGER, `customerCode` TEXT, `accountId` TEXT, `deliveryFee` REAL, `remark` TEXT, `deleted` INTEGER, `isDelivered` INTEGER, `cusId` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `OrderDetail` (`orderDetailId` INTEGER PRIMARY KEY AUTOINCREMENT, `price` REAL, `qty` INTEGER, `discount` REAL, `amt` REAL, `sizeId` INTEGER, `colorId` INTEGER, `imgUrl` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -154,6 +162,17 @@ class _$FlutterDatabase extends FlutterDatabase {
   @override
   UserDao get userDao {
     return _userDaoInstance ??= _$UserDao(database, changeListener);
+  }
+
+  @override
+  OrderDao get orderDao {
+    return _orderDaoInstance ??= _$OrderDao(database, changeListener);
+  }
+
+  @override
+  OrderDetailDao get orderDetailDao {
+    return _orderDetailDaoInstance ??=
+        _$OrderDetailDao(database, changeListener);
   }
 }
 
@@ -850,5 +869,242 @@ class _$UserDao extends UserDao {
   @override
   Future<void> deleteUser(User user) async {
     await _userDeletionAdapter.delete(user);
+  }
+}
+
+class _$OrderDao extends OrderDao {
+  _$OrderDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _orderInsertionAdapter = InsertionAdapter(
+            database,
+            'Order',
+            (Order item) => <String, dynamic>{
+                  'orderId': item.orderId,
+                  'isPaid': item.isPaid == null ? null : (item.isPaid ? 1 : 0),
+                  'discount': item.discount,
+                  'dueDate': item.dueDate,
+                  'paidAmount': item.paidAmount,
+                  'orderDate': item.orderDate,
+                  'updateDate': item.updateDate,
+                  'orderTotalAmt': item.orderTotalAmt,
+                  'orderTotalQty': item.orderTotalQty,
+                  'customerCode': item.customerCode,
+                  'accountId': item.accountId,
+                  'deliveryFee': item.deliveryFee,
+                  'remark': item.remark,
+                  'deleted':
+                      item.deleted == null ? null : (item.deleted ? 1 : 0),
+                  'isDelivered': item.isDelivered == null
+                      ? null
+                      : (item.isDelivered ? 1 : 0),
+                  'cusId': item.cusId
+                },
+            changeListener),
+        _orderUpdateAdapter = UpdateAdapter(
+            database,
+            'Order',
+            ['orderId'],
+            (Order item) => <String, dynamic>{
+                  'orderId': item.orderId,
+                  'isPaid': item.isPaid == null ? null : (item.isPaid ? 1 : 0),
+                  'discount': item.discount,
+                  'dueDate': item.dueDate,
+                  'paidAmount': item.paidAmount,
+                  'orderDate': item.orderDate,
+                  'updateDate': item.updateDate,
+                  'orderTotalAmt': item.orderTotalAmt,
+                  'orderTotalQty': item.orderTotalQty,
+                  'customerCode': item.customerCode,
+                  'accountId': item.accountId,
+                  'deliveryFee': item.deliveryFee,
+                  'remark': item.remark,
+                  'deleted':
+                      item.deleted == null ? null : (item.deleted ? 1 : 0),
+                  'isDelivered': item.isDelivered == null
+                      ? null
+                      : (item.isDelivered ? 1 : 0),
+                  'cusId': item.cusId
+                },
+            changeListener),
+        _orderDeletionAdapter = DeletionAdapter(
+            database,
+            'Order',
+            ['orderId'],
+            (Order item) => <String, dynamic>{
+                  'orderId': item.orderId,
+                  'isPaid': item.isPaid == null ? null : (item.isPaid ? 1 : 0),
+                  'discount': item.discount,
+                  'dueDate': item.dueDate,
+                  'paidAmount': item.paidAmount,
+                  'orderDate': item.orderDate,
+                  'updateDate': item.updateDate,
+                  'orderTotalAmt': item.orderTotalAmt,
+                  'orderTotalQty': item.orderTotalQty,
+                  'customerCode': item.customerCode,
+                  'accountId': item.accountId,
+                  'deliveryFee': item.deliveryFee,
+                  'remark': item.remark,
+                  'deleted':
+                      item.deleted == null ? null : (item.deleted ? 1 : 0),
+                  'isDelivered': item.isDelivered == null
+                      ? null
+                      : (item.isDelivered ? 1 : 0),
+                  'cusId': item.cusId
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _orderMapper = (Map<String, dynamic> row) => Order();
+
+  final InsertionAdapter<Order> _orderInsertionAdapter;
+
+  final UpdateAdapter<Order> _orderUpdateAdapter;
+
+  final DeletionAdapter<Order> _orderDeletionAdapter;
+
+  @override
+  Future<Order> findOrderById(int id) async {
+    return _queryAdapter.query('SELECT * FROM Order WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _orderMapper);
+  }
+
+  @override
+  Future<List<Order>> findAllOrder() async {
+    return _queryAdapter.queryList('SELECT * FROM Order', mapper: _orderMapper);
+  }
+
+  @override
+  Stream<List<Order>> findAllOrdersAsStream() {
+    return _queryAdapter.queryListStream('SELECT * FROM Order',
+        queryableName: 'Order', isView: false, mapper: _orderMapper);
+  }
+
+  @override
+  Future<void> insertOrder(Order itemSize) async {
+    await _orderInsertionAdapter.insert(itemSize, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> insertOrders(List<Order> list) async {
+    await _orderInsertionAdapter.insertList(list, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateOrders(Order size) async {
+    await _orderUpdateAdapter.update(size, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteOrder(Order size) async {
+    await _orderDeletionAdapter.delete(size);
+  }
+}
+
+class _$OrderDetailDao extends OrderDetailDao {
+  _$OrderDetailDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _orderDetailInsertionAdapter = InsertionAdapter(
+            database,
+            'OrderDetail',
+            (OrderDetail item) => <String, dynamic>{
+                  'orderDetailId': item.orderDetailId,
+                  'price': item.price,
+                  'qty': item.qty,
+                  'discount': item.discount,
+                  'amt': item.amt,
+                  'sizeId': item.sizeId,
+                  'colorId': item.colorId,
+                  'imgUrl': item.imgUrl
+                },
+            changeListener),
+        _orderDetailUpdateAdapter = UpdateAdapter(
+            database,
+            'OrderDetail',
+            ['orderDetailId'],
+            (OrderDetail item) => <String, dynamic>{
+                  'orderDetailId': item.orderDetailId,
+                  'price': item.price,
+                  'qty': item.qty,
+                  'discount': item.discount,
+                  'amt': item.amt,
+                  'sizeId': item.sizeId,
+                  'colorId': item.colorId,
+                  'imgUrl': item.imgUrl
+                },
+            changeListener),
+        _orderDetailDeletionAdapter = DeletionAdapter(
+            database,
+            'OrderDetail',
+            ['orderDetailId'],
+            (OrderDetail item) => <String, dynamic>{
+                  'orderDetailId': item.orderDetailId,
+                  'price': item.price,
+                  'qty': item.qty,
+                  'discount': item.discount,
+                  'amt': item.amt,
+                  'sizeId': item.sizeId,
+                  'colorId': item.colorId,
+                  'imgUrl': item.imgUrl
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _orderDetailMapper = (Map<String, dynamic> row) => OrderDetail();
+
+  final InsertionAdapter<OrderDetail> _orderDetailInsertionAdapter;
+
+  final UpdateAdapter<OrderDetail> _orderDetailUpdateAdapter;
+
+  final DeletionAdapter<OrderDetail> _orderDetailDeletionAdapter;
+
+  @override
+  Future<OrderDetail> findOrderDetailById(int id) async {
+    return _queryAdapter.query('SELECT * FROM OrderDetail WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _orderDetailMapper);
+  }
+
+  @override
+  Future<List<OrderDetail>> findAllOrderDetail() async {
+    return _queryAdapter.queryList('SELECT * FROM OrderDetail',
+        mapper: _orderDetailMapper);
+  }
+
+  @override
+  Stream<List<OrderDetail>> findAllOrderDetailsAsStream() {
+    return _queryAdapter.queryListStream('SELECT * FROM OrderDetail',
+        queryableName: 'OrderDetail',
+        isView: false,
+        mapper: _orderDetailMapper);
+  }
+
+  @override
+  Future<void> insertOrderDetail(OrderDetail od) async {
+    await _orderDetailInsertionAdapter.insert(od, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> insertOrderDetails(List<OrderDetail> listOD) async {
+    await _orderDetailInsertionAdapter.insertList(
+        listOD, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateOrderDetail(OrderDetail od) async {
+    await _orderDetailUpdateAdapter.update(od, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteOrderDetail(OrderDetail od) async {
+    await _orderDetailDeletionAdapter.delete(od);
   }
 }
