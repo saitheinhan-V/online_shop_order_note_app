@@ -12,4 +12,5 @@ class Customer{
    String cusSocialLink;
    int  cityId;
    int genderId;
+
 }
