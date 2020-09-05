@@ -90,7 +90,7 @@ class _CustomerSetupPageState extends State<CustomerSetupPage> {
                         ),
                       );
                     })
-                : Container(),
+                    : Container(),
               ),
             ],
           ),

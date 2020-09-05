@@ -123,62 +123,62 @@ class _OrderNotePageState extends State<OrderNotePage> {
               height: 400.0,
               margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 10.0),
               child: ListView.builder(
-                itemCount: 4,
+                  itemCount: 4,
                   itemBuilder: (context,index){
-                  return GestureDetector(
-                    onTap: (){
+                    return GestureDetector(
+                      onTap: (){
 
-                    },
-                    child: Container(
-                      height: 70.0,
-                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                          color: Colors.grey
+                      },
+                      child: Container(
+                        height: 70.0,
+                        margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(
+                              color: Colors.grey
+                          ),
+                          color: Colors.white,
                         ),
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: 30.0,
-                            margin: EdgeInsets.only(top: 0.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(child: Text('OrderID - 000001')),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(child: Text('50000 Ks')),
-                                ),
-                              ],
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 30.0,
+                              margin: EdgeInsets.only(top: 0.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child: Center(child: Text('OrderID - 000001')),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Center(child: Text('50000 Ks')),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            height: 30.0,
-                            margin: EdgeInsets.only(top: 0.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(child: Text('Sai Thein Han')),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(child: Text('Ordered')),
-                                ),
-                              ],
+                            Container(
+                              height: 30.0,
+                              margin: EdgeInsets.only(top: 0.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child: Center(child: Text('Sai Thein Han')),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Center(child: Text('Ordered')),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
+                    );
                   }),
             ),
           ],
